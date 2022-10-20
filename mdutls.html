@@ -1,0 +1,203 @@
+<h1>Markdown File Example</h1>
+<h1>Contents</h1>
+<ul>
+<li><a href="#overview">Overview</a></li>
+<li><a href="#this-is-what-you-can-do">This is what you can do</a><ul>
+<li><a href="#create-markdown-files">Create Markdown files</a></li>
+<li><a href="#create-headers">Create Headers</a></li>
+<li><a href="#table-of-contents">Table of Contents</a></li>
+<li><a href="#paragraph-and-text-format">Paragraph and Text Format</a></li>
+<li><a href="#create-a-table">Create a Table</a></li>
+<li><a href="#create-links">Create Links</a></li>
+<li><a href="#create-lists">Create Lists</a></li>
+<li><a href="#add-images">Add images</a></li>
+<li><a href="#add-html-images">Add HTML images</a></li>
+</ul>
+</li>
+</ul>
+<h1>Overview</h1>
+<p>This is an example of markdown file created using mdutils python package. In this example you are going to see how to create a markdown file using this library. Moreover, you're finding the available features which makes easy the creation of this type of files while you are running Python code.</p>
+<p><strong>IMPORTANT:</strong> some features available on this library have no effect with the GitHub Markdown CSS. Some of them are: coloring text, centering text...</p>
+<h1>This is what you can do</h1>
+<h2>Create Markdown files</h2>
+<p><code>create_md_file()</code> is the last command that has to be called.</p>
+<p>```python
+import Mdutils</p>
+<p>mdFile = MdUtils(file_name='Example_Markdown',title='Markdown File Example')
+mdFile.create_md_file()
+```</p>
+<h2>Create Headers</h2>
+<p>Using <code>new_header</code> method you can create headers of different levels depending on the style. There are two available styles: 'atx' and 'setext'. The first one has til 6 different header levels. Atx's levels 1 and 2 are automatically added to the table of contents unless the parameter <code>add_table_of_contents</code> is set to 'n'. The 'setext' style only has two levelsof headers.</p>
+<p><code>python
+mdFile.new_header(level=1, title='Atx Header 1')
+mdFile.new_header(level=2, title='Atx Header 2')
+mdFile.new_header(level=3, title='Atx Header 3')
+mdFile.new_header(level=4, title='Atx Header 4')
+mdFile.new_header(level=5, title='Atx Header 5')
+mdFile.new_header(level=6, title='Atx Header 6')</code></p>
+<h1>Atx Header 1</h1>
+<h2>Atx Header 2</h2>
+<h3>Atx Header 3</h3>
+<h4>Atx Header 4</h4>
+<h5>Atx Header 5</h5>
+<h6>Atx Header 6</h6>
+<p><code>python
+mdFile.new_header(level=1, title='Setext Header 1', style='setext')
+mdFile.new_header(level=2, title='Setext Header 2', style='setext')</code>
+Setext Header 1
+===============</p>
+<h2>Setext Header 2</h2>
+<h2>Table of Contents</h2>
+<p>If you have defined some headers of level 1 and 2, you can create a table of contents invoking the following command (Normally, the method will be called at the end of the code before calling <code>create_md_file()</code>)</p>
+<p><code>python
+mdFile.new_table_of_contents(table_title='Contents', depth=2)</code></p>
+<h2>Paragraph and Text Format</h2>
+<p>mdutils allows you to create paragraph, line breaks or simply write text:</p>
+<h3>New Paragraph Method</h3>
+<p><code>python
+mdFile.new_paragraph("Using ``new_paragraph`` method you can very easily add a new paragraph" 
+                     " This example of paragraph has been added using this method. Moreover,"
+                     "``new_paragraph`` method make your live easy because it can give format" 
+                     " to the text. Lets see an example:")</code></p>
+<p>Using <code>new_paragraph</code> method you can very easily add a new paragraph on your markdown file. This example of paragraph has been added using this method. Moreover, <code>new_paragraph</code> method make your live easy because it can give format to the text. Lets see an example:</p>
+<p><code>python
+mdFile.new_paragraph("This is an example of text in which has been added color, bold and italics text.", bold_italics_code='bi', color='purple')</code></p>
+<p><strong><em><font color="purple">This is an example of text in which has been added color, bold and italics text.</font></em></strong></p>
+<h3>New Line Method</h3>
+<p><code>mdutils</code> has a method which can create new line breaks. Lets see it.</p>
+<p><code>python
+mdFile.new_line("This is an example of line break which has been created with ``new_line`` method.")</code><br />
+This is an example of line break which has been created with <code>new_line</code> method.</p>
+<p>As <code>new_paragraph</code>, <code>new_line</code> allows users to give format to text using <code>bold_italics_code</code> and <code>color</code> parameters:</p>
+<p><code>python
+mdFile.new_line("This is an inline code which contains bold and italics text and it is centered", bold_italics_code='cib', align='center')</code><br />
+<strong><em><center><code>This is an inline code which contains bold and italics text and it is centered</code></center></em></strong></p>
+<h3>Write Method</h3>
+<p><code>write</code> method writes text in a markdown file without jump lines <code>'\n'</code> and as <code>new_paragraph</code> and <code>new_line</code>, you can give format to text using the arguments <code>bold_italics_code</code>, <code>color</code> and <code>align</code>: </p>
+<p><code>python
+mdFile.write("The following text has been written with ``write`` method. You can use markdown directives to write:"
+             "**bold**, _italics_, ``inline_code``... or ")
+mdFile.write("use the following available parameters:  \n")</code></p>
+<p>The following text has been written with <code>write</code> method. You can use markdown directives to write: <strong>bold</strong>, <em>italics</em>, <code>inline_code</code>... or use the following available parameters:  </p>
+<p><code>python
+mdFile.write('  \n')
+mdFile.write('bold_italics_code', bold_italics_code='bic')
+mdFile.write('  \n')
+mdFile.write('Text color', color='green')
+mdFile.write('  \n')
+mdFile.write('Align Text to center', align='center')</code><br />
+<strong><em><code>bold_italics_code</code></em></strong><br />
+<font color="green">Text color</font><br />
+<center>Align Text to center</center>  </p>
+<h2>Create a Table</h2>
+<p>The library implements a method called <code>new_table</code> that can create tables using a list of strings. This method only needs: the number of rows and columns that your table must have. Optionally you can align the content of the table using the parameter <code>text_align</code></p>
+<p><code>python
+list_of_strings = ["Items", "Descriptions", "Data"]
+for x in range(5):
+    list_of_strings.extend(["Item " + str(x), "Description Item " + str(x), str(x)])
+mdFile.new_line()
+mdFile.new_table(columns=3, rows=6, text=list_of_strings, text_align='center')</code>  </p>
+<p>|Items|Descriptions|Data|
+| :---: | :---: | :---: |
+|Item 0|Description Item 0|0|
+|Item 1|Description Item 1|1|
+|Item 2|Description Item 2|2|
+|Item 3|Description Item 3|3|
+|Item 4|Description Item 4|4|</p>
+<h2>Create Links</h2>
+<h3>Create inline links</h3>
+<p><code>new_inline_link</code> method allows you to create a link of the style: <code>[mdutils](https://github.com/didix21/mdutils)</code>.</p>
+<p>Moreover, you can add bold, italics or code in the link text. Check the following examples: </p>
+<p>```python
+mdFile.new_line('  - Inline link: ' + mdFile.new_inline_link(link='https://github.com/didix21/mdutils', text='mdutils')) 
+mdFile.new_line('  - Bold inline link: ' + mdFile.new_inline_link(link='https://github.com/didix21/mdutils', text='mdutils', bold_italics_code='b') 
+mdFile.new_line('  - Italics inline link: ' + mdFile.new_inline_link(link='https://github.com/didix21/mdutils', text='mdutils', bold_italics_code='i') 
+mdFile.new_line('  - Code inline link: ' + mdFile.new_inline_link(link='https://github.com/didix21/mdutils', text='mdutils', bold_italics_code='i') 
+mdFile.new_line('  - Bold italics code inline link: ' + mdFile.new_inline_link(link='https://github.com/didix21/mdutils', text='mdutils', bold_italics_code='cbi') 
+mdFile.new_line('  - Another inline link: ' + mdFile.new_inline_link(link='https://github.com/didix21/mdutils') </p>
+<p><code>`  
+  - Inline link: [mdutils](https://github.com/didix21/mdutils)  
+  - Bold inline link: [**mdutils**](https://github.com/didix21/mdutils)  
+  - Italics inline link: [*mdutils*](https://github.com/didix21/mdutils)  
+  - Code inline link: [</code>mdutils<code>](https://github.com/didix21/mdutils)  
+  - Bold italics code inline link: [***</code>mdutils``***](https://github.com/didix21/mdutils)<br />
+  - Another inline link: <a href="https://github.com/didix21/mdutils">https://github.com/didix21/mdutils</a></p>
+<h3>Create reference links</h3>
+<p><code>new_reference_link</code> method allows you to create a link of the style: <code>[mdutils][1]</code>. All references will be added at the end of the markdown file automatically as: </p>
+<p>```python</p>
+<p>```</p>
+<p>Lets check some examples: </p>
+<p>```python
+mdFile.write('\n  - Reference link: ' + mdFile.new_reference_link(link='https://github.com/didix21/mdutils', text='mdutils', reference_tag='1')
+mdFile.write('\n  - Reference link: ' + mdFile.new_reference_link(link='https://github.com/didix21/mdutils', text='another reference', reference_tag='md')
+mdFile.write('\n  - Bold link: ' + mdFile.new_reference_link(link='https://github.com/didix21/mdutils', text='Bold reference', reference_tag='bold', bold_italics_code='b')
+mdFile.write('\n  - Italics link: ' + mdFile.new_reference_link(link='https://github.com/didix21/mdutils', text='Bold reference', reference_tag='italics', bold_italics_code='i')</p>
+<p>```
+  - Reference link: <a href="https://github.com/didix21/mdutils">mdutils</a>
+  - Reference link: <a href="https://github.com/didix21/mdutils">another reference</a>
+  - Bold link: <a href="https://github.com/didix21/mdutils"><strong>Bold reference</strong></a>
+  - Italics link: <a href="https://github.com/didix21/mdutils"><em>Italics reference</em></a></p>
+<h2>Create Lists</h2>
+<h3>Create unordered lists</h3>
+<p>You can add Mark down unordered list using <code>mdFile.new_list(items, marked_with)</code>. Lets check an example: </p>
+<p>```
+items = ['Item 1', 'Item 2', 'Item 3', 'Item 4', ['Item 4.1', 'Item 4.2', ['Item 4.2.1', 'Item 4.2.2'], 'Item 4.3', ['Item 4.3.1']], 'Item 5']
+mdFile.new_list(items)</p>
+<p>```
+- Item 1
+- Item 2
+- Item 3
+- Item 4
+    - Item 4.1
+    - Item 4.2
+        - Item 4.2.1
+        - Item 4.2.2
+    - Item 4.3
+        - Item 4.3.1
+- Item 5</p>
+<h3>Create ordered lists</h3>
+<p>You can add ordered ones easily, too: <code>mdFile.new_list(items, marked_with='1')</code>
+1. Item 1
+2. Item 2
+3. Item 3
+4. Item 4
+    1. Item 4.1
+    2. Item 4.2
+        1. Item 4.2.1
+        2. Item 4.2.2
+    3. Item 4.3
+        1. Item 4.3.1
+5. Item 5</p>
+<p>Moreover, you can add mixed list, for example: </p>
+<p>```
+items = ['Item 1', 'Item 2', ['1. Item 2.1', '2. Item 2.2'], 'Item 3']
+mdFile.new_list(items)</p>
+<p>```
+- Item 1
+- Item 2
+    1. Item 2.1
+    2. Item 2.2
+- Item 3</p>
+<p>Maybe you want to replace the default hyphen <code>-</code> by a <code>+</code> or <code>*</code> then you can do: <code>mdFile.new_list(items, marked_with='*')</code>.</p>
+<h2>Add images</h2>
+<h3>Inline Images</h3>
+<p>You can add inline images using <code>new_inline_image</code> method. Method will return: <code>[image](../path/to/your/image.png)</code>. Check the following example: </p>
+<p><code>mdFile.new_line(mdFile.new_inline_image(text='snow trees', path='./doc/source/images/photo-of-snow-covered-trees.jpg'))</code><br />
+<img alt="snow trees" src="./doc/source/images/photo-of-snow-covered-trees.jpg" /></p>
+<h3>Reference Images</h3>
+<p>You can add inline images using <code>new_reference_image</code> method. Method will return: <code>[image][im]</code>. Check the following example: </p>
+<p><code>mdFile.new_line(mdFile.new_reference_image(text='snow trees', path='./doc/source/images/photo-of-snow-covered-trees.jpg', reference_tag='im'))</code><br />
+<img alt="snow trees" src="./doc/source/images/photo-of-snow-covered-trees.jpg" /></p>
+<h2>Add HTML images</h2>
+<h3>Change size to images</h3>
+<p>With <code>Html.image</code> you can change size of images in a markdown file. For example you can dothe following for changing width: <code>mdFile.new_paragraph(Html.image(path=path, size='200'))</code></p>
+<p><img src="./doc/source/images/sunset.jpg" width="200"/></p>
+<p>Or maybe only want to change height: <code>mdFile.new_paragraph(Html.image(path=path, size='x300'))</code></p>
+<p><img src="./doc/source/images/sunset.jpg" height="300"/></p>
+<p>Or change width and height: <code>mdFile.new_paragraph(Html.image(path=path, size='300x300'))</code></p>
+<p><img src="./doc/source/images/sunset.jpg" width="300" height="300"/></p>
+<h3>Align images</h3>
+<p>Html.image allow to align images, too. For example you can run: <code>mdFile.new_paragraph(Html.image(path=path, size='300x200', align='center'))</code></p>
+<p align="center">
+    <img src="./doc/source/images/sunset.jpg" width="300" height="200"/>
+</p>

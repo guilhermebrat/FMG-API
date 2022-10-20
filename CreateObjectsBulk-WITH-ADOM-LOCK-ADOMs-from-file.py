@@ -1,0 +1,122 @@
+import json
+import requests
+from fmglogin import sess
+from rich.console import Console
+from rich.table import Table
+from rich import box
+from rich.style import Style
+from netaddr import *
+from rich.console import Console
+from rich.table import Table
+import AdomLockUnlock
+import time
+import AdomCommit
+
+requests.packages.urllib3.disable_warnings()
+
+session_info = sess
+
+fmg = "192.168.227.230"
+base_url = f"https://{fmg}/jsonrpc"
+with open("adom_list.txt", 'r') as adom_file:
+    adom_file = adom_file.read()
+    adoms = adom_file.split("\n")
+
+console = Console()
+present_style = Style(color="green", blink=True, bold=True)
+not_present_style = Style(color="red", blink=True, bold=True)
+
+
+def create_object(fmg_url, sessi, adom, ip_addr, obj_name):
+    fw_obj_adom_6_4 = f"/pm/config/adom/{adom}/obj/firewall/address"
+
+    body = {
+        "id": 1,
+        "method": "add",
+        "params": [
+            {
+                "url": fw_obj_adom_6_4,
+                "data": [{
+                    "name": obj_name,
+                    "type": 0,
+                    "subnet": [str(ip_input.network), str(ip_input.netmask)]
+                }
+                ]
+            }
+        ],
+        "session": sessi
+    }
+
+    body = json.dumps(body)
+
+    response = requests.post(url=fmg_url, data=body, verify=False)
+    response = json.loads(response.content)
+    # print (response)
+    return response
+
+
+table = Table(title="FMG Objects Creation", box=box.SQUARE, show_lines=True, leading=False, pad_edge=False)
+table.add_column("Object Name", justify="center", style="green")
+table.add_column("ADOM", justify="left", style="magenta")
+table.add_column("Object Subnet", justify="left", style="magenta")
+table.add_column("Status", justify="left", style="magenta")
+
+not_valid_list = []
+
+for adomm in adoms:
+    print("\n")
+    print("Preparing to deploy changes \n" + "-"*100)
+    print(f"Locking ADOM to proceed with the modification \n" + "*"*100)
+    AdomLockUnlock.adom_lock(base_url, session_info, adomm)
+    print("*" * 100 + "\n\n")
+    time.sleep(1)
+    with open("bulk_objects.txt") as file:
+        for line in file:
+            data = line.split()
+            try:
+                ip_input = IPNetwork(data[1])
+                parsed_objs = create_object(base_url, session_info, adomm, ip_input, data[0])
+                if parsed_objs['result'][0]['status']['message'] == 'OK':
+                    table.add_row(data[0], adomm, str(ip_input), 'Object Added Successfully')
+                elif parsed_objs['result'][0]['status']['message'] == 'Object already exists':
+                    table.add_row(data[0], adomm, str(ip_input), 'Object Already Exists')
+            except:
+                invalid_addr = data[1]
+                if invalid_addr not in not_valid_list:
+                    not_valid_list.append(invalid_addr)
+
+
+    print("*" * 100 + "\n")
+    print("Commiting changes to FortiManager \n" + "-"*100)
+    AdomCommit.adom_commit(base_url, session_info, adomm)
+    print(f"Unlocking ADOM. Configuration Finished \n" + "-" * 100)
+    AdomLockUnlock.adom_unlock(base_url, session_info, adomm)
+    print("*" * 100)
+    time.sleep(1)
+
+console = Console()
+console.print(table)
+print ("\n\n")
+if not_valid_list:
+    print ("Invalid IP Addresses found \n" + "-"*100)
+    a=0
+    for size in not_valid_list:
+        if len(size) > a:
+            a = len(size)
+    print('*' * a + '*' * 22)
+    count = 1
+    for objects_not_added in not_valid_list:
+        if len(objects_not_added) < a:
+            c = a - len(objects_not_added)
+            console.print(f"*Object IP {objects_not_added} [red]NOT VALID[/red]" + '-' * c + '*')
+        else:
+            console.print(f"*Object IP {objects_not_added} [red]NOT VALID[/red]*")
+        if count < len(not_valid_list):
+            count +=1
+            print('*' + '-' * a + '-' * 20 + '*')
+        else:
+            print('*' * a + '*' * 22)
+
+from fmglogout import logout_sess
+
+logout_sess

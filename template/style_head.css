@@ -1,0 +1,31 @@
+body {
+  background-color: powdergreen;
+}
+h1 {
+  font-family:courier;
+  color: green;
+}
+h2 {
+  font-family:courier;
+  color: green;
+}
+p {
+  font-family:verdana;
+  color: orange;
+}
+
+table, td {
+  border-style: dotted;
+  border-collapse: collapse;
+  border-spacing: 3px;
+  padding: 5px;
+  padding-right: 50px;
+}
+th {
+ text-align: left;
+ color: orange;
+ background-color: #000000;
+
+}
+
+tr:hover {background-color: #D6EEEE;}
