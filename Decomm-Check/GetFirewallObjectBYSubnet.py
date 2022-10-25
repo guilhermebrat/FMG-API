@@ -7,8 +7,12 @@ from rich import box
 from rich.style import Style
 from netaddr import *
 import yaml
+import DefGetObjectIP
+import urllib3
 
-requests.packages.urllib3.disable_warnings()
+urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
+
+
 session_info = sess
 
 with open("inventory.yaml", "r") as stream:
@@ -28,44 +32,21 @@ present_style = Style(color="green", blink=True, bold=True)
 not_present_style = Style(color="red", blink=True, bold=True)
 
 
-def get_object_from_subnet(fmg_url, sessi, adom, ip_addr):
-    fw_obj_adom_6_4 = f"/pm/config/adom/{adom}/obj/firewall/address/"
-
-    body = {
-        "id": 1,
-        "method": "get",
-        "params": [
-            {
-                "fields": ['name'],
-                "filter": [[
-                    "subnet", "==", [str(ip_input.network), str(ip_input.netmask)]
-                ]],
-                "url": fw_obj_adom_6_4
-            }
-        ],
-        "session": sessi
-    }
-
-    body = json.dumps(body)
-
-    response = requests.post(url=fmg_url, data=body, verify=False)
-    response = json.loads(response.content)
-    return response
 
 
 empty_list = []
 result_dict = {}
 
 for adomm in yaml_inv['adoms']:
-    parsed_objs = get_object_from_subnet(base_url, session_info, adomm, ip_input)
+    parsed_objs = DefGetObjectIP.get_object_from_subnet(base_url, session_info, adomm, ip_input)
     if parsed_objs['result'][0]['data'] == empty_list:
-        console.print(f"Object {ip_input} does not exist in [magenta]ADOM {adomm}", style=not_present_style)
+        console.print(f"Object Searched: {ip_input.cidr} does not exist in [magenta]ADOM {adomm}", style=not_present_style)
         result_dict[adomm] = f'Object {ip_input} does not exist'
 
     else:
         for objects in parsed_objs['result'][0]['data']:
             console.print(
-                f"[yellow]Object IP: {ip_input}[/yellow] [blue]Object Name is: {objects['name']}[/blue] and is [green][bold]PRESENT[/bold][/green] in [magenta]ADOM {adomm}")
+                f"[yellow]Object IP: {ip_input.cidr}[/yellow] [blue]Object Name is: {objects['name']}[/blue] and is [green][bold]PRESENT[/bold][/green] in [magenta]ADOM {adomm}")
             result_dict[adomm] = f'Object {ip_input} Name {objects["name"]} exists in ADOM'
 
 f = open("demo2.txt", "w")

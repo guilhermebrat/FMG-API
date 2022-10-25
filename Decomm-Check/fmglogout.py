@@ -2,7 +2,9 @@ import json
 import requests
 from fmglogin import sess
 import yaml
+import urllib3
 
+urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
 with open("inventory.yaml", "r") as stream:
     yaml_inv = yaml.safe_load(stream)
