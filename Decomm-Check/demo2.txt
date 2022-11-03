@@ -1,1 +1,1 @@
-{"root": "Object 10.10.10.100/32 does not exist", "FGT-6-0": "Object 10.10.10.100/32 does not exist", "FGT-6-2": "Object 10.10.10.100/32 does not exist", "FGT-6-4": "Object 10.10.10.100/32 Name PC1 exists in ADOM"}
+{}
