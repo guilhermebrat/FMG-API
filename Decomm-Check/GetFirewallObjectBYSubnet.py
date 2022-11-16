@@ -12,6 +12,20 @@ import urllib3
 import os
 import getpass
 from prettytable import PrettyTable as pt
+from datetime import datetime
+
+today = datetime.today().strftime("%d-%m-%Y")
+
+directory = str(getpass.getuser())
+root_dir = os.getcwd()
+
+path = os.path.join(root_dir, directory)
+if not os.path.exists(path):
+    os.makedirs(path)
+
+path_date = os.path.join(path, today)
+if not os.path.exists(path_date):
+    os.makedirs(path_date)
 
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 session_info = sess
@@ -21,21 +35,9 @@ with open("inventory.yaml", "r") as stream:
 
 base_url = f"https://{yaml_inv['fmg']}/jsonrpc"
 
-ip_input = input("Object IP you want to find format - 192.168.0.0/24: ")
+ip_input = input("Object IP you want to find (ip/mask): ")
 ip_input = IPNetwork(ip_input)
 
-directory = str(getpass.getuser())
-root_dir = "C:/Users/guilhermebrat/Desktop/"
-
-path = os.path.join(root_dir, directory)
-try:
-    os.mkdir(path)
-except OSError as error:
-    pass
-
-console = Console()
-present_style = Style(color="green", blink=True, bold=True)
-not_present_style = Style(color="red", blink=True, bold=True)
 
 empty_list = []
 result_dict = {}
@@ -73,7 +75,7 @@ for adom in yaml_inv['adoms']:
                 # print (f"IP {str(ip_input)} in object  {objects['name']} ADOM {adom} ")
 
 if len(obj_range_found_list) == 0:
-    tb_iprange.add_row(["-", str(ip_input), "IP Not Found in nay Range Object", " - "])
+    tb_iprange.add_row(["-", str(ip_input), "IP Not Found in any Range Object", " - "])
     # print(f"IP {str(ip_input)} NOT found in any Range Object")
 
 print(tb.get_string(title="IP Object Checker"))
@@ -85,10 +87,12 @@ tb_string = tb.get_string(title="IP Object Checker")
 tb_iprange_string = tb_iprange.get_string(title="IP Range Object Checker")
 open
 
-with open(os.path.join(path, file_name), "w") as f:
+with open(os.path.join(path_date, file_name), "w") as f:
     f.write(tb_string)
     f.write("\n\n\n")
     f.write(tb_iprange_string)
+    f.write("\n\n")
+    f.write(f"File written at: {datetime.now()}")
 
 from fmglogout import logout_sess
 
