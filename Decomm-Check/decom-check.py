@@ -40,7 +40,8 @@ if option == 1:
     ip_input = IPNetwork(ip_input)
 
 elif option == 2:
-    with open("ticket.yaml", "r") as streamb:
+    file = input("Whats the file name in .yaml format (name.yaml): ")
+    with open(file, "r") as streamb:
         yaml_ticket = yaml.safe_load(streamb)
 else:
     print("Option not available")
