@@ -87,12 +87,23 @@ tb_string = tb.get_string(title="IP Object Checker")
 tb_iprange_string = tb_iprange.get_string(title="IP Range Object Checker")
 open
 
-with open(os.path.join(path_date, file_name), "w") as f:
-    f.write(tb_string)
-    f.write("\n\n\n")
-    f.write(tb_iprange_string)
-    f.write("\n\n")
-    f.write(f"File written at: {datetime.now()}")
+if os.path.isfile(os.path.join(path_date, file_name)):
+    with open(os.path.join(path_date, file_name), "a+") as fa:
+        fa.write("\n\n")
+        fa.write("*"*100)
+        fa.write("\n\n")
+        fa.write(tb_string)
+        fa.write("\n\n\n")
+        fa.write(tb_iprange_string)
+        fa.write("\n\n")
+        fa.write(f"File written at: {datetime.now()}")
+else:
+    with open(os.path.join(path_date, file_name), "w") as f:
+        f.write(tb_string)
+        f.write("\n\n\n")
+        f.write(tb_iprange_string)
+        f.write("\n\n")
+        f.write(f"File written at: {datetime.now()}")
 
 from fmglogout import logout_sess
 
