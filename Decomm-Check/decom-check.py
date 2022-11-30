@@ -181,24 +181,24 @@ elif option == 1:
         else:
             for objects in parsed_objs['result'][0]['data']:
                 tb.add_row([adomm, ip_input.cidr, "Object Found", objects["name"]])
-            for policies_pkg in yaml_inv['firewall-policies']:
-                for key, value in policies_pkg.items():
-                    if key == adomm:
-                        for policy in value:
-                            parsed_policy = DefGetPolicyByObjectName.get_policy_by_source(base_url, session_info, adomm,
-                                                                                objects['name'],policy)
-                            parsed_policy = parsed_policy['result'][0]['data']
-                            for policies in parsed_policy:
-                                tb_policy_srcaddr.add_row([adomm, policy, policies['obj seq'], policies['srcintf'][0],
-                                        policies['dstintf'][0], policies['srcaddr'][0], policies['dstaddr'][0], policies['action']])
+                for policies_pkg in yaml_inv['firewall-policies']:
+                    for key, value in policies_pkg.items():
+                        if key == adomm:
+                            for policy in value:
+                                parsed_policy = DefGetPolicyByObjectName.get_policy_by_source(base_url, session_info, adomm,
+                                                                                    objects['name'],policy)
+                                parsed_policy = parsed_policy['result'][0]['data']
+                                for policies in parsed_policy:
+                                    tb_policy_srcaddr.add_row([adomm, policy, policies['obj seq'], policies['srcintf'][0],
+                                            policies['dstintf'][0], policies['srcaddr'][0], policies['dstaddr'][0], policies['action']])
 
-                            parsed_policy = DefGetPolicyByObjectName.get_policy_by_destination(base_url, session_info, adomm,
-                                                                                          objects['name'], policy)
-                            parsed_policy = parsed_policy['result'][0]['data']
-                            for policies in parsed_policy:
-                                tb_policy_dstaddr.add_row([adomm, policy, policies['obj seq'], policies['srcintf'][0],
-                                                           policies['dstintf'][0], policies['srcaddr'][0],
-                                                           policies['dstaddr'][0], policies['action']])
+                                parsed_policy = DefGetPolicyByObjectName.get_policy_by_destination(base_url, session_info, adomm,
+                                                                                              objects['name'], policy)
+                                parsed_policy = parsed_policy['result'][0]['data']
+                                for policies in parsed_policy:
+                                    tb_policy_dstaddr.add_row([adomm, policy, policies['obj seq'], policies['srcintf'][0],
+                                                               policies['dstintf'][0], policies['srcaddr'][0],
+                                                               policies['dstaddr'][0], policies['action']])
 
         parsed_objs_range = DefGetObject.get_object_range(base_url, session_info, adomm)
         result_objs_range = parsed_objs_range['result'][0]['data']
