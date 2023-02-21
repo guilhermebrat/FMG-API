@@ -4,7 +4,5 @@
    - root
    - FGT2-0
  firewall-policies:
-   - root:
-       - Test
    - FGT2-0:
-        - FGT-6-2-11
+        - FGT-6-2-11_root

@@ -49,3 +49,28 @@ def get_object_range(fmg_url, sessi, adom):
     response = requests.post(url=fmg_url, data=body, verify=False)
     response = json.loads(response.content)
     return response
+
+
+def get_object_group(fmg_url, sessi, adom, obj_name):
+    fw_obj_adom = f"/pm/config/adom/{adom}/obj/firewall/addrgrp/"
+
+    body = {
+        "id": 1,
+        "method": "get",
+        "params": [
+            {
+                "fields": ['name'],
+                "filter": [[
+                    "member", "==", obj_name
+                ]],
+                "url": fw_obj_adom
+            }
+        ],
+        "session": sessi
+    }
+
+    body = json.dumps(body)
+
+    response = requests.post(url=fmg_url, data=body, verify=False)
+    response = json.loads(response.content)
+    return response
